@@ -3,14 +3,21 @@ from typing import Callable, get_type_hints
 
 from app.database.database_connector import DatabaseConnector
 from app.database.impl.database_connector_impl import DatabaseConnectorImpl
+from app.services.mail.impl.mail_service_impl import MailServiceImpl
+from app.services.mail.mail_service import MailService
 
 bindings = { }
 
 # Create instances only one time
 database_connector = DatabaseConnectorImpl()
 
+mail_service = MailServiceImpl()
+
 # Put them in an interface -> instance dict so they will be used everytime a dependency is required
 bindings[DatabaseConnector] = database_connector
+
+bindings[MailService] = mail_service
+
 
 def resolve(interface):
     implementation = bindings[interface]

@@ -1,14 +1,36 @@
 from fastapi import Request
 from fastapi.responses import JSONResponse
 
-from app.exceptions.service_not_exists_exception import ServiceNotExistsException
+from app.exceptions.bad_request_exception import BadRequestException
+from app.exceptions.internal_error_exception import InternalErrorException
+from app.exceptions.not_found_exception import NotFoundException
+from app.exceptions.validation_exception import ValidationException
 
 
-async def service_non_existent_exception_handler(request: Request, exc: ServiceNotExistsException):
+async def not_found_exception_handler(request: Request, exc: NotFoundException):
+    return JSONResponse(
+        status_code=404,
+        content={"message": exc.message},
+    )
+
+async def bad_request_exception_handler(request: Request, exc: BadRequestException):
     return JSONResponse(
         status_code=400,
         content={"message": exc.message},
     )
+
+async def internal_error_exception_handler(request: Request, exc: InternalErrorException):
+    return JSONResponse(
+        status_code=500,
+        content={"message": exc.message},
+    )
+
+async def validation_exception_handler(request: Request, exc: ValidationException):
+    return JSONResponse(
+        status_code=400,
+        content={"message": exc.message},
+    )
+
 
 # This returns tuples of handler function name and exception type that it handles given all the functions in this file
 # except obviously this one.
