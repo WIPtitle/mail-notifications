@@ -1,3 +1,5 @@
+from typing import List
+
 from app.config.bindings import inject
 from app.models.mail import Mail
 from app.routers.router_wrapper import RouterWrapper
@@ -12,7 +14,11 @@ class MailRouter(RouterWrapper):
 
 
     def _define_routes(self):
-        @self.router.post("/", operation_id="create_slash")
-        @self.router.post("", operation_id="create_without_slash")
+        @self.router.post("/send")
         def send_mail(mail: Mail) -> Mail:
             return self.mail_service.send_mail(mail)
+
+
+        @self.router.post("/bulk-send")
+        def send_bulk_mail(mails: List[Mail]) -> List[Mail]:
+            return [self.mail_service.send_mail(mail) for mail in mails]

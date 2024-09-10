@@ -4,5 +4,5 @@ from sqlmodel import SQLModel
 
 class Mail(SQLModel):
     receiver: str
-    obj: str
+    subject: str
     text: str
