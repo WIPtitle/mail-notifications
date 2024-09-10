@@ -24,8 +24,3 @@ class ConfigRepositoryImpl(ConfigRepository):
         with open(self.file_path, 'w') as file:
             json.dump(config.model_dump(), file)
         return config
-
-
-    def update_config(self, config: Config) -> Config:
-        self.get_config() # Will throw if it doesn't already exist
-        return self.create_config(config)

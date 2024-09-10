@@ -11,7 +11,3 @@ class ConfigService(ABC):
     @abstractmethod
     def create_config(self, config: Config) -> Config:
         pass
-
-    @abstractmethod
-    def update_config(self, config: Config) -> Config:
-        pass

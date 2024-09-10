@@ -30,9 +30,3 @@ class ConfigServiceImpl(ConfigService):
         if not validate_smtp_connection(config):
             raise ValidationException("Connection to smtp server cannot be established")
         return self.config_repository.create_config(config)
-
-
-    def update_config(self, config: Config) -> Config:
-        if not validate_smtp_connection(config):
-            raise ValidationException("Connection to smtp server cannot be established")
-        return self.config_repository.update_config(config)

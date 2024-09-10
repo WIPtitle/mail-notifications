@@ -17,11 +17,6 @@ class ConfigRouter(RouterWrapper):
             return ConfigResponse.model_validate(self.config_service.create_config(config))
 
 
-        @self.router.put("/")
-        def update_config(config: Config) -> ConfigResponse:
-            return ConfigResponse.model_validate(self.config_service.update_config(config))
-
-
         @self.router.get("/")
         def get_config() -> ConfigResponse:
             return ConfigResponse.model_validate(self.config_service.get_config())
