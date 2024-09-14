@@ -26,20 +26,20 @@ class CameraAlarmConsumer(BaseConsumer):
 
     def do_handle(self, event):
         event: CameraAlarm = CameraAlarm.from_dict(event)
-        print("should send email")
+        print("SENDING MAIL")
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         loop = asyncio.get_event_loop()
         users = loop.run_until_complete(self.auth_client.get_all_users())
-        print(users)
-        sys.stdout.flush()
         try:
-            self.mail_service.send_mail(
-                Mail(
-                    receiver="",
-                    subject="",
-                    text=""
+            for user in users:
+                self.mail_service.send_mail(
+                    Mail(
+                        receiver=user.email,
+                        subject="ALARM STARTED",
+                        text=f"Your alarm has started (IP Camera: {event.name})",
+                        attachment=event.blob
+                    )
                 )
-            )
         except:
             pass

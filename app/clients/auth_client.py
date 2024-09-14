@@ -16,7 +16,7 @@ class AuthClient:
 
 
     async def get_all_users(self):
-        url = f"http://{self.auth_hostname}/users/"
+        url = f"http://{self.auth_hostname}:8000/users/"
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
             response.raise_for_status()

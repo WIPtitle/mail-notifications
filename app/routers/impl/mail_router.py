@@ -1,5 +1,6 @@
 from typing import List
 
+from app.clients.auth_client import AuthClient
 from app.config.bindings import inject
 from app.models.mail import Mail
 from app.routers.router_wrapper import RouterWrapper

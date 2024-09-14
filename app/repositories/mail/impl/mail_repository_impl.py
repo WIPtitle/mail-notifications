@@ -1,6 +1,11 @@
 import smtplib
+from email import encoders
+from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from io import BytesIO
+
+from PIL import Image
 
 from app.exceptions.bad_request_exception import BadRequestException
 from app.models.config import Config
@@ -20,6 +25,18 @@ class MailRepositoryImpl(MailRepository):
             msg['To'] = mail.receiver
             msg['Subject'] = mail.subject
             msg.attach(MIMEText(mail.text, 'plain'))
+
+            if mail.attachment:
+                image = Image.open(BytesIO(mail.attachment))
+                byte_io = BytesIO()
+                image.save(byte_io, 'JPEG')
+                byte_io.seek(0)
+
+                part = MIMEBase('application', 'octet-stream')
+                part.set_payload(byte_io.read())
+                encoders.encode_base64(part)
+                part.add_header('Content-Disposition', f'attachment; filename="image.jpg"')
+                msg.attach(part)
 
             server.send_message(msg)
             server.quit()

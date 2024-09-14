@@ -6,3 +6,4 @@ class Mail(SQLModel):
     receiver: str
     subject: str
     text: str
+    attachment: bytes

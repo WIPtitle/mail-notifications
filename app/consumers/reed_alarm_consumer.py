@@ -1,3 +1,4 @@
+import asyncio
 from typing import Type
 
 from rabbitmq_sdk.consumer.base_consumer import BaseConsumer
@@ -24,14 +25,20 @@ class ReedAlarmConsumer(BaseConsumer):
 
     def do_handle(self, event):
         event: ReedAlarm = ReedAlarm.from_dict(event)
+        print("SENDING MAIL")
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop = asyncio.get_event_loop()
+        users = loop.run_until_complete(self.auth_client.get_all_users())
         try:
-            #TODO get all users from auth? probably
-            self.mail_service.send_mail(
-                Mail(
-                    receiver="",
-                    subject="",
-                    text=""
+            for user in users:
+                self.mail_service.send_mail(
+                    Mail(
+                        receiver=user.email,
+                        subject="ALARM STARTED",
+                        text=f"Your alarm has started (Magnetic reed: {event.name})",
+                        attachment=None
+                    )
                 )
-            )
         except:
             pass
