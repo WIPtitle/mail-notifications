@@ -5,14 +5,16 @@ from rabbitmq_sdk.enums.event import Event
 from rabbitmq_sdk.event.base_event import BaseEvent
 from rabbitmq_sdk.event.impl.devices_manager.reed_alarm import ReedAlarm
 
+from app.clients.auth_client import AuthClient
 from app.models.mail import Mail
 from app.services.mail.mail_service import MailService
 
 
 class ReedAlarmConsumer(BaseConsumer):
-    def __init__(self, mail_service: MailService):
+    def __init__(self, mail_service: MailService, auth_client: AuthClient):
         super().__init__()
         self.mail_service = mail_service
+        self.auth_client = auth_client
 
     def get_event(self) -> Event:
         return Event.REED_ALARM
