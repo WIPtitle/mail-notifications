@@ -7,7 +7,7 @@ from app.services.config.config_service import ConfigService
 class ConfigRouter(RouterWrapper):
     @inject
     def __init__(self, config_service: ConfigService):
-        super().__init__(prefix=f"/config")
+        super().__init__(prefix=f"/mail-config")
         self.config_service = config_service
 
 

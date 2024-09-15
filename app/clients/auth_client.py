@@ -1,7 +1,8 @@
 import os
 from typing import List
-from sqlmodel import SQLModel
+
 import httpx
+from sqlmodel import SQLModel
 
 
 class UserResponse(SQLModel):
