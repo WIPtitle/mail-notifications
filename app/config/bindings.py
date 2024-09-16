@@ -41,7 +41,7 @@ reed_alarm_consumer = ReedAlarmConsumer(mail_service, auth_client)
 camera_alarm_consumer = CameraAlarmConsumer(mail_service, auth_client)
 
 rabbitmq_client.consume(camera_alarm_consumer)
-rabbitmq_client.consume(camera_alarm_consumer)
+rabbitmq_client.consume(reed_alarm_consumer)
 
 # Put them in an interface -> instance dict so they will be used everytime a dependency is required
 bindings[MailService] = mail_service
