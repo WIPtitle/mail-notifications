@@ -25,7 +25,7 @@ class ReedAlarmConsumer(BaseConsumer):
 
     def do_handle(self, event):
         event: ReedAlarm = ReedAlarm.from_dict(event)
-        logging.debug("SENDING MAIL")
+        print("SENDING MAIL")
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         loop = asyncio.get_event_loop()
@@ -41,5 +41,5 @@ class ReedAlarmConsumer(BaseConsumer):
                     )
                 )
         except Exception as e:
-            logging.error(e)
+            print(e)
             pass
