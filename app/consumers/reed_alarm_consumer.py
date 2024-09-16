@@ -40,5 +40,6 @@ class ReedAlarmConsumer(BaseConsumer):
                         attachment=None
                     )
                 )
-        except:
+        except Exception as e:
+            print(e)
             pass

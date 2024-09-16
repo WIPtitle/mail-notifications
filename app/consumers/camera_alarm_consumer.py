@@ -40,5 +40,6 @@ class CameraAlarmConsumer(BaseConsumer):
                         attachment=event.blob
                     )
                 )
-        except:
+        except Exception as e:
+            print(e)
             pass
