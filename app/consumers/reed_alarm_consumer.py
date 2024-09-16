@@ -9,7 +9,7 @@ from rabbitmq_sdk.event.impl.devices_manager.reed_alarm import ReedAlarm
 from app.clients.auth_client import AuthClient
 from app.models.mail import Mail
 from app.services.mail.mail_service import MailService
-
+import logging
 
 class ReedAlarmConsumer(BaseConsumer):
     def __init__(self, mail_service: MailService, auth_client: AuthClient):
@@ -25,7 +25,7 @@ class ReedAlarmConsumer(BaseConsumer):
 
     def do_handle(self, event):
         event: ReedAlarm = ReedAlarm.from_dict(event)
-        print("SENDING MAIL")
+        logging.debug("SENDING MAIL")
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         loop = asyncio.get_event_loop()
@@ -41,5 +41,5 @@ class ReedAlarmConsumer(BaseConsumer):
                     )
                 )
         except Exception as e:
-            print(e)
+            logging.error(e)
             pass
