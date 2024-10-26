@@ -20,3 +20,8 @@ class ConfigRouter(RouterWrapper):
         @self.router.get("/")
         def get_config() -> ConfigResponse:
             return ConfigResponse.model_validate(self.config_service.get_config())
+
+
+        @self.router.delete("/")
+        def delete_config() -> ConfigResponse:
+            return ConfigResponse.model_validate(self.config_service.delete_config())

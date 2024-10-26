@@ -13,7 +13,7 @@ def validate_smtp_connection(config: Config) -> bool:
         server.login(config.smtp_user, config.smtp_password)
         server.quit()
         return True
-    except smtplib.SMTPAuthenticationError:
+    except Exception:
         return False
 
 
@@ -30,3 +30,6 @@ class ConfigServiceImpl(ConfigService):
         if not validate_smtp_connection(config):
             raise ValidationException("Connection to smtp server cannot be established")
         return self.config_repository.create_config(config)
+
+    def delete_config(self) -> Config:
+        return self.config_repository.delete_config()

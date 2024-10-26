@@ -11,3 +11,7 @@ class ConfigRepository(ABC):
     @abstractmethod
     def create_config(self, config: Config) -> Config:
         pass
+
+    @abstractmethod
+    def delete_config(self) -> Config:
+        pass

@@ -24,3 +24,13 @@ class ConfigRepositoryImpl(ConfigRepository):
         with open(self.file_path, 'w') as file:
             json.dump(config.model_dump(), file)
         return config
+
+
+    def delete_config(self) -> Config:
+        if self.file_path.exists():
+            with open(self.file_path, 'r') as file:
+                data = json.load(file)
+            self.file_path.unlink()
+            return Config(**data)
+        else:
+            raise NotFoundException("Config not found")
