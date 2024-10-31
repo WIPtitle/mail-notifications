@@ -12,6 +12,8 @@ from app.database.impl.database_connector_impl import DatabaseConnectorImpl
 from app.repositories.config.impl.config_repository_impl import ConfigRepositoryImpl
 from app.services.config.config_service import ConfigService
 from app.services.config.impl.config_service_impl import ConfigServiceImpl
+from app.services.notification.impl.notification_service_impl import NotificationServiceImpl
+from app.services.notification.notification_service import NotificationService
 from app.utils.read_credentials import read_credentials
 
 bindings = { }
@@ -31,6 +33,7 @@ rabbitmq_client = RabbitMQClientImpl.from_config(
 config_repository = ConfigRepositoryImpl(database_connector=database_connector)
 
 config_service = ConfigServiceImpl(config_repository)
+notification_service = NotificationServiceImpl(config_repository)
 
 # Consumers
 reed_alarm_consumer = ReedAlarmConsumer()
@@ -43,6 +46,7 @@ rabbitmq_client.consume(reed_alarm_consumer)
 bindings[DatabaseConnector] = database_connector
 
 bindings[ConfigService] = config_service
+bindings[NotificationService] = notification_service
 
 
 def resolve(interface):
