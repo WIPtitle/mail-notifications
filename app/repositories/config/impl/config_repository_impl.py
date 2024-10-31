@@ -1,36 +1,37 @@
-import json
-from pathlib import Path
+from sqlmodel import select
 
+from app.database.database_connector import DatabaseConnector
 from app.exceptions.not_found_exception import NotFoundException
 from app.models.config import Config
 from app.repositories.config.config_repository import ConfigRepository
 
 
 class ConfigRepositoryImpl(ConfigRepository):
-    def __init__(self):
-        self.file_path = Path("/var/lib/mail-notifications/data/config.json")
-
+    def __init__(self, database_connector: DatabaseConnector):
+        self.database_connector = database_connector
 
     def get_config(self) -> Config:
-        if self.file_path.exists():
-            with open(self.file_path, 'r') as file:
-                data = json.load(file)
-                return Config(**data)
-        else:
-            raise NotFoundException("Config not found")
+        statement = select(Config)
+        config_db = self.database_connector.get_session().exec(statement).one_or_none()
+        if config_db is None:
+            raise NotFoundException("Config was not found")
+
+        return config_db
 
 
     def create_config(self, config: Config) -> Config:
-        with open(self.file_path, 'w') as file:
-            json.dump(config.model_dump(), file)
+        try:
+            self.delete_config()
+        except:
+            pass
+        self.database_connector.get_session().add(config)
+        self.database_connector.get_session().commit()
+        self.database_connector.get_session().refresh(config)
         return config
 
 
     def delete_config(self) -> Config:
-        if self.file_path.exists():
-            with open(self.file_path, 'r') as file:
-                data = json.load(file)
-            self.file_path.unlink()
-            return Config(**data)
-        else:
-            raise NotFoundException("Config not found")
+        config_db = self.get_config()
+        self.database_connector.get_session().delete(config_db)
+        self.database_connector.get_session().commit()
+        return config_db

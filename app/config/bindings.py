@@ -5,18 +5,18 @@ from typing import Callable, get_type_hints
 from rabbitmq_sdk.client.impl.rabbitmq_client_impl import RabbitMQClientImpl
 from rabbitmq_sdk.enums.service import Service
 
-from app.clients.auth_client import AuthClient
 from app.consumers.camera_alarm_consumer import CameraAlarmConsumer
 from app.consumers.reed_alarm_consumer import ReedAlarmConsumer
+from app.database.database_connector import DatabaseConnector
+from app.database.impl.database_connector_impl import DatabaseConnectorImpl
 from app.repositories.config.impl.config_repository_impl import ConfigRepositoryImpl
-from app.repositories.mail.impl.mail_repository_impl import MailRepositoryImpl
 from app.services.config.config_service import ConfigService
 from app.services.config.impl.config_service_impl import ConfigServiceImpl
-from app.services.mail.impl.mail_service_impl import MailServiceImpl
-from app.services.mail.mail_service import MailService
 from app.utils.read_credentials import read_credentials
 
 bindings = { }
+
+database_connector = DatabaseConnectorImpl()
 
 rabbit_credentials = read_credentials(os.getenv('RBBT_CREDENTIALS_FILE'))
 rabbitmq_client = RabbitMQClientImpl.from_config(
@@ -28,23 +28,20 @@ rabbitmq_client = RabbitMQClientImpl.from_config(
 
 
 # Create instances only one time
-mail_repository = MailRepositoryImpl()
-config_repository = ConfigRepositoryImpl()
+config_repository = ConfigRepositoryImpl(database_connector=database_connector)
 
-mail_service = MailServiceImpl(config_repository, mail_repository)
 config_service = ConfigServiceImpl(config_repository)
 
-auth_client = AuthClient()
-
 # Consumers
-reed_alarm_consumer = ReedAlarmConsumer(mail_service, auth_client)
-camera_alarm_consumer = CameraAlarmConsumer(mail_service, auth_client)
+reed_alarm_consumer = ReedAlarmConsumer()
+camera_alarm_consumer = CameraAlarmConsumer()
 
 rabbitmq_client.consume(camera_alarm_consumer)
 rabbitmq_client.consume(reed_alarm_consumer)
 
 # Put them in an interface -> instance dict so they will be used everytime a dependency is required
-bindings[MailService] = mail_service
+bindings[DatabaseConnector] = database_connector
+
 bindings[ConfigService] = config_service
 
 

@@ -1,20 +1,6 @@
-import smtplib
-
-from app.exceptions.validation_exception import ValidationException
 from app.models.config import Config
 from app.repositories.config.config_repository import ConfigRepository
 from app.services.config.config_service import ConfigService
-
-
-def validate_smtp_connection(config: Config) -> bool:
-    try:
-        server = smtplib.SMTP(config.smtp_server, config.smtp_port)
-        server.starttls()
-        server.login(config.smtp_user, config.smtp_password)
-        server.quit()
-        return True
-    except Exception:
-        return False
 
 
 class ConfigServiceImpl(ConfigService):
@@ -27,9 +13,8 @@ class ConfigServiceImpl(ConfigService):
 
 
     def create_config(self, config: Config) -> Config:
-        if not validate_smtp_connection(config):
-            raise ValidationException("Connection to smtp server cannot be established")
         return self.config_repository.create_config(config)
+
 
     def delete_config(self) -> Config:
         return self.config_repository.delete_config()
