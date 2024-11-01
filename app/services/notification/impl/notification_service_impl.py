@@ -7,19 +7,19 @@ from io import BytesIO
 from PIL import Image
 
 from app.models.notification import Notification
-from app.repositories.config.config_repository import ConfigRepository
 from app.services.notification.notification_service import NotificationService
+from app.utils.read_credentials import read_credentials
 
 
 class NotificationServiceImpl(NotificationService):
-    def __init__(self, config_repository: ConfigRepository):
-        self.config_repository = config_repository
+    def __init__(self):
         self.ntfy_hostname = os.getenv("NTFY_HOSTNAME")
+        self.ntfy_credentials = read_credentials(os.getenv('NTFY_CREDENTIALS_FILE'))
 
 
     def send_notification(self, notification: Notification) -> bool:
-        config = self.config_repository.get_config()
-        url = f"http://{self.ntfy_hostname}/{config.alarm_topic}"
+        url = f"http://{self.ntfy_hostname}/{self.ntfy_credentials['NTFY_TOPIC']}"
+        auth = (self.ntfy_credentials['NTFY_WRITER_USER'], self.ntfy_credentials['NTFY_WRITER_PASSWORD'])
 
         if notification.file is not None:
             blob = notification.file
@@ -35,7 +35,7 @@ class NotificationServiceImpl(NotificationService):
                 "Actions": f"view, Open webpage, {notification.url}, clear=true",
             }
 
-            response = requests.post(url, data=byte_io.getvalue(), headers=headers)
+            response = requests.post(url, data=byte_io.getvalue(), headers=headers, auth=auth)
         else:
             headers = {
                 "Title": notification.title,
@@ -43,6 +43,6 @@ class NotificationServiceImpl(NotificationService):
                 "Actions": f"view, Open webpage, {notification.url}, clear=true",
             }
 
-            response = requests.post(url, headers=headers)
+            response = requests.post(url, headers=headers, auth=auth)
 
         return response.status_code == 200

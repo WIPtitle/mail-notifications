@@ -9,9 +9,6 @@ from app.consumers.camera_alarm_consumer import CameraAlarmConsumer
 from app.consumers.reed_alarm_consumer import ReedAlarmConsumer
 from app.database.database_connector import DatabaseConnector
 from app.database.impl.database_connector_impl import DatabaseConnectorImpl
-from app.repositories.config.impl.config_repository_impl import ConfigRepositoryImpl
-from app.services.config.config_service import ConfigService
-from app.services.config.impl.config_service_impl import ConfigServiceImpl
 from app.services.notification.impl.notification_service_impl import NotificationServiceImpl
 from app.services.notification.notification_service import NotificationService
 from app.utils.read_credentials import read_credentials
@@ -30,14 +27,11 @@ rabbitmq_client = RabbitMQClientImpl.from_config(
 
 
 # Create instances only one time
-config_repository = ConfigRepositoryImpl(database_connector=database_connector)
-
-config_service = ConfigServiceImpl(config_repository)
-notification_service = NotificationServiceImpl(config_repository)
+notification_service = NotificationServiceImpl()
 
 # Consumers
-reed_alarm_consumer = ReedAlarmConsumer()
-camera_alarm_consumer = CameraAlarmConsumer()
+reed_alarm_consumer = ReedAlarmConsumer(notification_service=notification_service)
+camera_alarm_consumer = CameraAlarmConsumer(notification_service=notification_service)
 
 rabbitmq_client.consume(camera_alarm_consumer)
 rabbitmq_client.consume(reed_alarm_consumer)
@@ -45,7 +39,6 @@ rabbitmq_client.consume(reed_alarm_consumer)
 # Put them in an interface -> instance dict so they will be used everytime a dependency is required
 bindings[DatabaseConnector] = database_connector
 
-bindings[ConfigService] = config_service
 bindings[NotificationService] = notification_service
 
 

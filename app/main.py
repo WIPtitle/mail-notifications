@@ -3,12 +3,11 @@ from typing import List
 from fastapi import FastAPI
 
 from app.config.handlers import get_exception_handlers
-from app.routers.impl.config_router import ConfigRouter
 from app.routers.router_wrapper import RouterWrapper
 
 exception_handlers = get_exception_handlers()
 routers: List[RouterWrapper] = [
-    ConfigRouter()
+    # for now no router is needed here, but it very well might be in the not so distant future so I keep the structure as is
 ]
 
 app = FastAPI()
