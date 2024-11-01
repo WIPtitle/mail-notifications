@@ -26,7 +26,6 @@ class CameraAlarmConsumer(BaseConsumer):
             Notification(
                 title="Test notification",
                 priority="5",
-                url="google.com", #TODO put correct url
                 file=event.blob
             )
         )

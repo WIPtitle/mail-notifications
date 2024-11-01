@@ -26,6 +26,5 @@ class ReedAlarmConsumer(BaseConsumer):
             Notification(
                 title="Test notification",
                 priority="5",
-                url="google.com"
             )
         )
