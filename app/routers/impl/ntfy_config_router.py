@@ -11,6 +11,11 @@ class NtfyConfigRouter(RouterWrapper):
 
 
     def _define_routes(self):
-        @self.router.post("/credentials")
+        @self.router.get("/credentials")
         def get_ntfy_credentials():
             return self.notification_service.get_ntfy_credentials()
+
+
+        @self.router.put("/credentials")
+        def update_ntfy_credentials():
+            return self.notification_service.update_ntfy_credentials()

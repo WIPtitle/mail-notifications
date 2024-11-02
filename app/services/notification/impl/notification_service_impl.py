@@ -1,4 +1,5 @@
 import os
+import time
 
 import requests
 
@@ -20,6 +21,28 @@ class NotificationServiceImpl(NotificationService):
 
 
     def get_ntfy_credentials(self) -> NtfyCredentials:
+        return NtfyCredentials(
+            user=self.ntfy_credentials['NTFY_READER_USER'],
+            password=self.ntfy_credentials['NTFY_READER_PASSWORD'],
+            topic=self.ntfy_credentials['NTFY_TOPIC']
+        )
+
+
+    def update_ntfy_credentials(self) -> NtfyCredentials:
+        credentials_file = os.getenv('NTFY_CREDENTIALS_FILE')
+        old_password = self.ntfy_credentials['NTFY_READER_PASSWORD']
+
+        os.remove(credentials_file)
+
+        new_password = old_password
+        while new_password == old_password:
+            time.sleep(1)
+            try:
+                self.ntfy_credentials = read_credentials(credentials_file)
+                new_password = self.ntfy_credentials['NTFY_READER_PASSWORD']
+            except FileNotFoundError:
+                continue
+
         return NtfyCredentials(
             user=self.ntfy_credentials['NTFY_READER_USER'],
             password=self.ntfy_credentials['NTFY_READER_PASSWORD'],
