@@ -24,7 +24,8 @@ class NotificationServiceImpl(NotificationService):
         return NtfyCredentials(
             user=self.ntfy_credentials['NTFY_READER_USER'],
             password=self.ntfy_credentials['NTFY_READER_PASSWORD'],
-            topic=self.ntfy_credentials['NTFY_TOPIC']
+            topic=self.ntfy_credentials['NTFY_TOPIC'],
+            url=self.lt_credentials['URL_NTFY']
         )
 
 
@@ -46,7 +47,8 @@ class NotificationServiceImpl(NotificationService):
         return NtfyCredentials(
             user=self.ntfy_credentials['NTFY_READER_USER'],
             password=self.ntfy_credentials['NTFY_READER_PASSWORD'],
-            topic=self.ntfy_credentials['NTFY_TOPIC']
+            topic=self.ntfy_credentials['NTFY_TOPIC'],
+            url=self.lt_credentials['URL_NTFY']
         )
 
 
