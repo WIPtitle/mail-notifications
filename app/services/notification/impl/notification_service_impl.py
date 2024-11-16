@@ -15,17 +15,15 @@ from app.utils.read_credentials import read_credentials
 
 class NotificationServiceImpl(NotificationService):
     def __init__(self):
-        self.ntfy_hostname = os.getenv("NTFY_HOSTNAME") # This is the docker hostname, not the localtunnel url
+        self.ntfy_hostname = os.getenv("NTFY_HOSTNAME")
         self.ntfy_credentials = read_credentials(os.getenv('NTFY_CREDENTIALS_FILE'))
-        self.lt_credentials = read_credentials(os.getenv('LT_CREDENTIALS_FILE'))
 
 
     def get_ntfy_credentials(self) -> NtfyCredentials:
         return NtfyCredentials(
             user=self.ntfy_credentials['NTFY_READER_USER'],
             password=self.ntfy_credentials['NTFY_READER_PASSWORD'],
-            topic=self.ntfy_credentials['NTFY_TOPIC'],
-            url=self.lt_credentials['URL_NTFY']
+            topic=self.ntfy_credentials['NTFY_TOPIC']
         )
 
 
@@ -47,8 +45,7 @@ class NotificationServiceImpl(NotificationService):
         return NtfyCredentials(
             user=self.ntfy_credentials['NTFY_READER_USER'],
             password=self.ntfy_credentials['NTFY_READER_PASSWORD'],
-            topic=self.ntfy_credentials['NTFY_TOPIC'],
-            url=self.lt_credentials['URL_NTFY']
+            topic=self.ntfy_credentials['NTFY_TOPIC']
         )
 
 
@@ -67,7 +64,6 @@ class NotificationServiceImpl(NotificationService):
                 "Title": notification.title,
                 "Priority": notification.priority,
                 "Filename": "image.jpeg",
-                "Actions": f"view, Open webpage, {self.lt_credentials['URL_FRONTEND']}, clear=true",
             }
 
             response = requests.post(url, data=byte_io.getvalue(), headers=headers, auth=auth)
@@ -75,7 +71,6 @@ class NotificationServiceImpl(NotificationService):
             headers = {
                 "Title": notification.title,
                 "Priority": notification.priority,
-                "Actions": f"view, Open webpage, {self.lt_credentials['URL_FRONTEND']}, clear=true",
             }
 
             response = requests.post(url, headers=headers, auth=auth)
