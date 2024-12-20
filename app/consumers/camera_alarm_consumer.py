@@ -24,7 +24,7 @@ class CameraAlarmConsumer(BaseConsumer):
         event: CameraAlarm = CameraAlarm.from_dict(event)
         self.notification_service.send_notification(
             Notification(
-                title="Test notification",
+                title="[ALARM TRIGGERED] Camera: " + event.name,
                 priority="5",
                 file=event.blob
             )

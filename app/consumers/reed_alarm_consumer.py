@@ -24,7 +24,7 @@ class ReedAlarmConsumer(BaseConsumer):
         event: ReedAlarm = ReedAlarm.from_dict(event)
         self.notification_service.send_notification(
             Notification(
-                title="Test notification",
+                title="[ALARM TRIGGERED] Reed: " + event.name,
                 priority="5",
             )
         )
