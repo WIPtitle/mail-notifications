@@ -1,4 +1,5 @@
 import os
+import time
 from functools import wraps
 from typing import Callable, get_type_hints
 
@@ -33,8 +34,12 @@ notification_service = NotificationServiceImpl()
 reed_alarm_consumer = ReedAlarmConsumer(notification_service=notification_service)
 camera_alarm_consumer = CameraAlarmConsumer(notification_service=notification_service)
 
-rabbitmq_client.consume(camera_alarm_consumer)
-rabbitmq_client.consume(reed_alarm_consumer)
+# Consume messages with retry if connection fails
+while not rabbitmq_client.consume(camera_alarm_consumer):
+    time.sleep(5)
+
+while not rabbitmq_client.consume(reed_alarm_consumer):
+    time.sleep(5)
 
 # Put them in an interface -> instance dict so they will be used everytime a dependency is required
 bindings[DatabaseConnector] = database_connector
