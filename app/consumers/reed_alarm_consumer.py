@@ -26,5 +26,6 @@ class ReedAlarmConsumer(BaseConsumer):
             Notification(
                 title="[ALARM TRIGGERED] Reed: " + event.name,
                 priority="5",
+                message=f"Magnetic reed has been opened"
             )
         )

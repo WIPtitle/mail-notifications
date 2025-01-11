@@ -73,6 +73,6 @@ class NotificationServiceImpl(NotificationService):
                 "Priority": notification.priority,
             }
 
-            response = requests.post(url, headers=headers, auth=auth)
+            response = requests.post(url, data=notification.message, headers=headers, auth=auth)
 
         return response.status_code == 200
