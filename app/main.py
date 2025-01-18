@@ -4,7 +4,6 @@ from fastapi import FastAPI
 
 from app.config.handlers import get_exception_handlers
 from app.routers.impl.ntfy_config_router import NtfyConfigRouter
-from app.routers.impl.test_notification_router import TestNotificationRouter
 from app.routers.router_wrapper import RouterWrapper
 
 exception_handlers = get_exception_handlers()

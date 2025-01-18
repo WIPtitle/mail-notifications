@@ -1,10 +1,11 @@
+import io
+
+from PIL import Image
+
 from app.config.bindings import inject
 from app.models.notification import Notification
 from app.routers.router_wrapper import RouterWrapper
 from app.services.notification.notification_service import NotificationService
-
-from PIL import Image
-import io
 
 width, height = 1000, 500
 white_image = Image.new("RGB", (width, height), "white")

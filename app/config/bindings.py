@@ -6,7 +6,6 @@ from typing import Callable, get_type_hints
 from rabbitmq_sdk.client.impl.rabbitmq_client_impl import RabbitMQClientImpl
 from rabbitmq_sdk.enums.service import Service
 
-from app.consumers.camera_alarm_consumer import CameraAlarmConsumer
 from app.consumers.reed_alarm_consumer import ReedAlarmConsumer
 from app.database.database_connector import DatabaseConnector
 from app.database.impl.database_connector_impl import DatabaseConnectorImpl
@@ -32,12 +31,8 @@ notification_service = NotificationServiceImpl()
 
 # Consumers
 reed_alarm_consumer = ReedAlarmConsumer(notification_service=notification_service)
-camera_alarm_consumer = CameraAlarmConsumer(notification_service=notification_service)
 
 # Consume messages with retry if connection fails
-while not rabbitmq_client.consume(camera_alarm_consumer):
-    time.sleep(5)
-
 while not rabbitmq_client.consume(reed_alarm_consumer):
     time.sleep(5)
 

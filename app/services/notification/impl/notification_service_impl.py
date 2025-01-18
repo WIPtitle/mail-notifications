@@ -1,10 +1,8 @@
 import os
 import time
-
-import requests
-
 from io import BytesIO
 
+import requests
 from PIL import Image
 
 from app.models.notification import Notification
